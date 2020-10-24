@@ -3,10 +3,10 @@ use crate::chars::exclude_char;
 pub(crate) struct DictEntry {
     min: u8,
     keys: KeyTree, //可以有更好的方案
-    values: Vec<Vec<String>>,
+    values: Vec<String>,
 }
 impl DictEntry {
-    pub(crate) fn new(min: u8, keys: Vec<String>, values: Vec<Vec<String>>) -> Self {
+    pub(crate) fn new(min: u8, keys: Vec<String>, values: Vec<String>) -> Self {
         let mut keyt = KeyTree::new();
         for (n, i) in keys.into_iter().enumerate() {
             keyt.insert(i.chars(), n);
@@ -36,7 +36,7 @@ impl DictEntry {
             }
             if iter.peek().is_some() {
                 if let Some((index, t)) = point.matchchars(iter.clone()) {
-                    res.push_str(unsafe { self.values.get_unchecked(index).get_unchecked(0) });
+                    res.push_str(unsafe { self.values.get_unchecked(index) });
                     iter = t;
                     flag = false;
                 } else {

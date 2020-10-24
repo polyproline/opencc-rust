@@ -1,5 +1,5 @@
-use futures::future::join_all;
 use futures::executor::block_on;
+use futures::future::join_all;
 use wasm_bindgen::prelude::*;
 
 use std::sync::Arc;
@@ -45,11 +45,10 @@ impl ConverterBuild {
                 let key = key_v.get_unchecked(0).to_string();
                 let value = key_v.get_unchecked(1);
                 let values: Vec<&str> = value.split(' ').collect();
-                let value: Vec<String> = values.into_iter().map(|t| t.to_string()).collect();
+                let value: String = values.into_iter().map(|t| t.to_string()).next().unwrap();
                 (key, value)
             };
             assert!(key.len() > 0, "key\t{}\t{:?}", key, value);
-            assert!(value.len() > 0, "value\t{}\t{:?}", key, value);
             min = min.min(key.len());
             keys.push(key);
             values.push(value);
