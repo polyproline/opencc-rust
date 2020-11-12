@@ -7,6 +7,8 @@ use std::sync::Arc;
 use crate::chars::exclude_char;
 use crate::dict::DictEntry;
 
+/// 对于字符串进行分割，避免比较序列过长
+/// 也可并行处理(未实现)
 const MIN_SYNCOPATION: usize = 512;
 const MAX_SYNCOPATION: usize = 1024;
 
@@ -49,6 +51,7 @@ impl ConverterBuild {
                 (key, value)
             };
             assert!(key.len() > 0, "key\t{}\t{:?}", key, value);
+            assert!(key.chars().filter(|c|exclude_char(*c)).next().is_none(),"key 值非法，可能未更新");
             min = min.min(key.len());
             keys.push(key);
             values.push(value);
@@ -97,6 +100,7 @@ impl Converter {
                 }
             })
         };
+        /// 这里可以用 async-std 或 tokio 库多线程 并行加速
         block_on(join_all(
             datas.map(|s| convert_slice(self.dict.clone(), s.to_string())),
         ))

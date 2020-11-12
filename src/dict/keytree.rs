@@ -36,23 +36,23 @@ impl<'a> KeyPoint<'a> {
         mut iter: Peekable<I>,
     ) -> Option<(usize, Peekable<I>)> {
         let mut stack = Vec::new();
-        while let Some(c) = iter.peek().map(|t| t.clone()) {
+        while let Some(mut c) = iter.peek().map(|t| t.clone()) {
             if exclude_char(c) {
                 break;
+            }
+            if c.is_ascii() {
+                c.make_ascii_uppercase();
             }
             if let Some(n) = self.p.next.get(&c) {
                 self.p = n;
                 iter.next();
-                stack.push((self.p.result, iter.clone()));
+                if let Some(res) = self.p.result{
+                    stack.push((res, iter.clone()));
+                }
             } else {
                 break;
             }
         }
-        while let Some((res, iter)) = stack.pop() {
-            if let Some(index) = res {
-                return Some((index, iter));
-            }
-        }
-        return None;
+        stack.pop()
     }
 }
