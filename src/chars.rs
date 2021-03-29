@@ -1,8 +1,9 @@
 use lazy_static::lazy_static;
-use std::collections::BTreeSet;
+use std::collections::HashSet;
+
 lazy_static! {
-    static ref PUNCTUATIONS: BTreeSet<char> = "，。？《》〈〉“”‘’；：；！、（）".chars().collect();
-    static ref INSIDE: BTreeSet<char> = "LNPQSU".chars().collect();
+    static ref PUNCTUATIONS: HashSet<char> = "，。？《》〈〉“”‘’；：；！、（）".chars().collect();
+    static ref INSIDE: HashSet<char> = "LNPQSU".chars().collect();
 }
 /// 根据 opencc-data@1.0.5 key值 推出
 /// 硬编码

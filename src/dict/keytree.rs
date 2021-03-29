@@ -1,20 +1,20 @@
-use std::collections::HashMap;
+use std::collections::{BTreeMap,HashMap};
 use std::iter::Peekable;
 
 use crate::chars::exclude_char;
 
-pub(super) struct KeyTree {
+pub(crate) struct KeyTree {
     next: HashMap<char, Box<KeyTree>>,
     result: Option<usize>,
 }
 impl KeyTree {
-    pub(super) fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             next: HashMap::new(),
             result: None,
         }
     }
-    pub(super) fn insert<T: Iterator<Item = char>>(&mut self, mut iter: T, index: usize) {
+    pub(crate) fn insert<T: Iterator<Item = char>>(&mut self, mut iter: T, index: usize) {
         if let Some(c) = iter.next() {
             let n = self.next.entry(c).or_insert_with(|| Box::new(Self::new()));
             n.insert(iter, index);
@@ -40,9 +40,7 @@ impl<'a> KeyPoint<'a> {
             if exclude_char(c) {
                 break;
             }
-            if c.is_ascii() {
-                c.make_ascii_uppercase();
-            }
+            c.make_ascii_uppercase();
             if let Some(n) = self.p.next.get(&c) {
                 self.p = n;
                 iter.next();
